@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Route, Router } from '@angular/router';
+import { UsersService } from 'src/app/shared/services/users.service';
 
 @Component({
   templateUrl: './login-page.component.html',
@@ -6,9 +8,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginPageComponent implements OnInit {
 
-  constructor() { }
+  email: string = "";
+  senha: string = "";
+  error = false;
+
+
+
+  constructor(
+    private usersService: UsersService,
+    private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  authenticate() {
+    const user = this.usersService.getUserByEmailAndPassword(this.email, this.senha)
+
+    if (user) {
+      this.router.navigateByUrl('/sell');
+      sessionStorage.setItem('user', JSON.stringify(user));
+    } else {
+      this.error = true;
+    }
   }
 
 }
